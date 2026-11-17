@@ -10,7 +10,6 @@ import {
   Volume2,
   VolumeX,
   Sparkles,
-  Heart,
   CheckCircle,
   Gift,
 } from "lucide-react";
@@ -27,36 +26,36 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Golden Silk Foil Texture for Canvas Cover
     const width = canvas.width;
     const height = canvas.height;
 
+    // Metallic Champagne Gold Texture
     const grad = ctx.createLinearGradient(0, 0, width, height);
-    grad.addColorStop(0, "#D4AF37");
-    grad.addColorStop(0.3, "#FFF5D1");
-    grad.addColorStop(0.6, "#C59B27");
-    grad.addColorStop(1, "#E5C158");
+    grad.addColorStop(0, "#EAC775");
+    grad.addColorStop(0.3, "#FFF8E7");
+    grad.addColorStop(0.5, "#D4AF37");
+    grad.addColorStop(0.8, "#FAF0D7");
+    grad.addColorStop(1, "#C29B38");
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // Decorative Pattern on Scratch surface
-    ctx.strokeStyle = "rgba(163, 116, 21, 0.4)";
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(8, 8, width - 16, height - 16);
+    // Border and text
+    ctx.strokeStyle = "rgba(180, 130, 20, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(6, 6, width - 12, height - 12);
 
-    // Text on scratch card
-    ctx.font = "bold 13px 'Cormorant Garamond', serif";
-    ctx.fillStyle = "#4A3B12";
+    ctx.font = "bold 13px 'Cinzel Decorative', serif";
+    ctx.fillStyle = "#533D08";
     ctx.textAlign = "center";
-    ctx.letterSpacing = "2px";
     ctx.fillText("✧ SCRATCH WITH LOVE ✧", width / 2, height / 2 - 4);
-    ctx.font = "11px sans-serif";
-    ctx.fillStyle = "#695319";
+
+    ctx.font = "italic 13px 'Cormorant Garamond', serif";
+    ctx.fillStyle = "#6E5212";
     ctx.fillText(
-      "Reveal Ahmad & Hania's Secret Note",
+      "Touch & scratch to reveal secret note",
       width / 2,
-      height / 2 + 16,
+      height / 2 + 18,
     );
   }, []);
 
@@ -72,7 +71,7 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
 
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 18, 0, Math.PI * 2);
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
     ctx.fill();
 
     if (!isScratched) {
@@ -81,36 +80,16 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    isDrawing.current = true;
-    scratch(e.clientX, e.clientY);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing.current) return;
-    scratch(e.clientX, e.clientY);
-  };
-
-  const handleMouseUp = () => {
-    isDrawing.current = false;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (e.touches.length > 0) {
-      scratch(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  };
-
   return (
     <div
       style={{
         position: "relative",
-        width: "320px",
-        height: "120px",
+        width: "340px",
+        height: "125px",
         margin: "0 auto",
-        borderRadius: "14px",
+        borderRadius: "16px",
         overflow: "hidden",
-        boxShadow: "0 10px 25px rgba(212, 175, 55, 0.25)",
+        boxShadow: "0 10px 30px rgba(212, 175, 55, 0.28)",
         border: "1.5px solid #D4AF37",
       }}
     >
@@ -119,7 +98,7 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(135deg, #FFFDF8 0%, #FAF2DE 100%)",
+          background: "linear-gradient(135deg, #FFFDF8 0%, #FDF3DC 100%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -133,36 +112,43 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
         <h4
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "17px",
+            fontSize: "19px",
             color: "#835E12",
-            margin: "0 0 2px 0",
+            margin: "0 0 4px 0",
             fontWeight: 700,
           }}
         >
-          VIP Royal Guest Table Reserved
+          Special VIP Suite Reserved For You
         </h4>
         <p
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "13px",
+            fontSize: "14px",
             fontStyle: "italic",
-            color: "#6B583E",
+            color: "#5C4A33",
             margin: 0,
           }}
         >
-          "Your presence is the most cherished gift for our new beginning."
+          "Your presence is the most precious prayer for our new life."
         </p>
       </div>
 
-      {/* Golden Canvas Overlay to be scratched */}
+      {/* Canvas scratch layer */}
       <canvas
         ref={canvasRef}
-        width={320}
-        height={120}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchMove={handleTouchMove}
+        width={340}
+        height={125}
+        onMouseDown={(e) => {
+          isDrawing.current = true;
+          scratch(e.clientX, e.clientY);
+        }}
+        onMouseMove={(e) => {
+          if (isDrawing.current) scratch(e.clientX, e.clientY);
+        }}
+        onMouseUp={() => (isDrawing.current = false)}
+        onTouchMove={(e) => {
+          if (e.touches[0]) scratch(e.touches[0].clientX, e.touches[0].clientY);
+        }}
         style={{
           position: "absolute",
           top: 0,
@@ -175,18 +161,17 @@ function RoyalScratchBox({ onRevealed }: { onRevealed?: () => void }) {
   );
 }
 
-// ================= MAIN WEDDING CARD COMPONENT =================
-export default function LightRoyalWeddingCard() {
+// ================= MAIN COMPONENT =================
+export default function LightRoyalGrandWeddingCard() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [guestName, setGuestName] = useState("");
   const [guestCount, setGuestCount] = useState("1");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Audio Reference (public/sajna.mp3)
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Countdown timer
+  // Countdown
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -213,34 +198,34 @@ export default function LightRoyalWeddingCard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Shahi Champagne & Rose Gold Petal Shower
+  // Shahi Champagne Shower
   const triggerRoyalShower = () => {
-    const colors = ["#E6CA65", "#F7DDB0", "#FFFFFF", "#FAD0C4", "#C5A059"];
-    for (let i = 0; i < 75; i++) {
+    const colors = ["#E6CA65", "#FFF2D1", "#FFFFFF", "#FBDCC4", "#D4AF37"];
+    for (let i = 0; i < 80; i++) {
       const petal = document.createElement("div");
       petal.style.position = "fixed";
       petal.style.left = Math.random() * 100 + "vw";
       petal.style.top = "-25px";
-      petal.style.width = Math.random() * 12 + 8 + "px";
-      petal.style.height = Math.random() * 16 + 10 + "px";
+      petal.style.width = Math.random() * 14 + 8 + "px";
+      petal.style.height = Math.random() * 18 + 10 + "px";
       petal.style.backgroundColor =
         colors[Math.floor(Math.random() * colors.length)];
       petal.style.zIndex = "99999";
       petal.style.pointerEvents = "none";
       petal.style.borderRadius = "80% 0 80% 0";
-      petal.style.boxShadow = "0 0 10px rgba(212, 175, 55, 0.4)";
+      petal.style.boxShadow = "0 0 12px rgba(212, 175, 55, 0.4)";
       petal.style.transition =
-        "transform 3.5s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 3.5s ease";
+        "transform 3.8s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 3.8s ease";
       document.body.appendChild(petal);
 
       setTimeout(() => {
         petal.style.transform = `translate(${
-          Math.random() * 200 - 100
+          Math.random() * 240 - 120
         }px, 105vh) rotate(${Math.random() * 720}deg)`;
         petal.style.opacity = "0";
       }, 20);
 
-      setTimeout(() => petal.remove(), 3600);
+      setTimeout(() => petal.remove(), 3900);
     }
   };
 
@@ -280,70 +265,104 @@ export default function LightRoyalWeddingCard() {
         minHeight: "100vh",
         position: "relative",
         overflowX: "hidden",
-        backgroundColor: "#FAF7F2", // Pure warm ivory
+        backgroundColor: "#F7F2E9",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: isUnlocked ? "50px 16px 110px 16px" : "16px",
+        padding: isUnlocked ? "60px 16px 120px 16px" : "16px",
       }}
     >
       {/* 🎵 Audio File */}
       <audio ref={audioRef} src="/sajna.mp3" loop preload="auto" />
 
-      {/* Google Luxury Fonts */}
+      {/* Luxury Google Fonts */}
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Amiri:wght@700&family=Montserrat:wght@300;400;600&display=swap"
       />
 
       <style>{`
-        @keyframes subtleGoldShimmer {
+        /* 🌊 Animated Silk Waves Background */
+        @keyframes silkFlow {
+          0% { transform: rotate(0deg) scale(1); }
+          50% { transform: rotate(180deg) scale(1.15); }
+          100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes floatGoldDust {
+          0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+          50% { transform: translateY(-25px) rotate(180deg); opacity: 0.8; }
+          100% { transform: translateY(0px) rotate(360deg); opacity: 0.3; }
+        }
+        @keyframes goldShine {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
-        @keyframes waxPulse {
-          0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
-          50% { transform: scale(1.04); box-shadow: 0 0 45px rgba(212, 175, 55, 0.7); }
+        @keyframes waxPulseGlow {
+          0%, 100% {
+            box-shadow: 0 0 30px rgba(220, 175, 60, 0.5), 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: scale(1);
+          }
+          50% {
+            box-shadow: 0 0 55px rgba(220, 175, 60, 0.85), 0 0 20px rgba(255, 255, 255, 0.95);
+            transform: scale(1.05);
+          }
         }
-        .light-gold-shimmer {
-          background: linear-gradient(90deg, #9C721D 0%, #E6CA65 30%, #7A550C 50%, #E6CA65 70%, #9C721D 100%);
+        .light-gold-text-shimmer {
+          background: linear-gradient(90deg, #A1761E 0%, #ECC557 25%, #6A4907 50%, #ECC557 75%, #A1761E 100%);
           background-size: 200% auto;
           color: transparent;
           -webkit-background-clip: text;
           background-clip: text;
-          animation: subtleGoldShimmer 6s linear infinite;
+          animation: goldShine 5.5s linear infinite;
         }
-        .royal-card-shadow {
-          box-shadow: 0 25px 70px rgba(184, 148, 86, 0.18), 0 5px 25px rgba(0, 0, 0, 0.04);
+        .grand-card-shadow {
+          box-shadow: 0 35px 90px rgba(189, 150, 75, 0.22), 0 10px 30px rgba(0, 0, 0, 0.05);
         }
       `}</style>
 
-      {/* ================= LIGHT SILK PEARL BACKGROUND ================= */}
+      {/* ================= 🌌 LUXURY ANIMATED LIGHT BACKGROUND ================= */}
       <div
         style={{
           position: "fixed",
-          inset: 0,
+          inset: -100,
           background:
-            "radial-gradient(circle at 50% 30%, #FFFFFF 0%, #F5EFEB 60%, #EDE4DB 100%)",
+            "radial-gradient(circle at 50% 40%, #FFFDF8 0%, #F5ECDD 40%, #EBDBC5 80%, #DEC8AE 100%)",
           zIndex: 0,
           pointerEvents: "none",
         }}
       />
 
-      {/* Elegant Damask Star Pattern */}
+      {/* Rotating Ambient Silk Nebulas for depth */}
+      <div
+        style={{
+          position: "fixed",
+          top: "-20%",
+          left: "-10%",
+          width: "140vw",
+          height: "140vh",
+          background:
+            "radial-gradient(circle, rgba(243, 219, 161, 0.45) 0%, rgba(255,255,255,0) 60%)",
+          filter: "blur(60px)",
+          zIndex: 0,
+          pointerEvents: "none",
+          animation: "silkFlow 24s ease-in-out infinite",
+        }}
+      />
+
+      {/* Golden Polka Dot Damask Pattern */}
       <div
         style={{
           position: "fixed",
           inset: 0,
           backgroundImage:
-            "radial-gradient(rgba(197, 160, 89, 0.2) 1.2px, transparent 1.2px)",
+            "radial-gradient(rgba(196, 152, 68, 0.22) 1.5px, transparent 1.5px)",
           backgroundSize: "36px 36px",
           pointerEvents: "none",
           zIndex: 0,
         }}
       />
 
-      {/* 🎶 Floating Floating Music Toggle */}
+      {/* 🎶 Floating Floating Crystal Audio Button */}
       {isUnlocked && (
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
@@ -358,13 +377,13 @@ export default function LightRoyalWeddingCard() {
             backgroundColor: "#FFFFFF",
             border: "1.5px solid #D4AF37",
             borderRadius: "50px",
-            padding: "10px 18px",
+            padding: "11px 20px",
             display: "flex",
             alignItems: "center",
             gap: "9px",
             cursor: "pointer",
             color: "#4A3B12",
-            boxShadow: "0 10px 25px rgba(212, 175, 55, 0.25)",
+            boxShadow: "0 10px 25px rgba(212, 175, 55, 0.3)",
             backdropFilter: "blur(10px)",
           }}
         >
@@ -403,54 +422,55 @@ export default function LightRoyalWeddingCard() {
         </motion.button>
       )}
 
-      {/* ================= 1. STARTING SCREEN: ROYAL PEARL ENVELOPE ================= */}
+      {/* ================= 1. STARTING SCREEN: MAJESTIC SEAL FARMAN ================= */}
       <AnimatePresence>
         {!isUnlocked && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.92, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{
               opacity: 0,
-              scale: 1.25,
-              rotateX: -15,
-              filter: "blur(12px)",
+              scale: 1.4,
+              filter: "blur(20px)",
               transition: { duration: 0.9, ease: [0.65, 0, 0.35, 1] },
             }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: "relative",
               zIndex: 50,
               width: "100%",
-              maxWidth: "460px",
+              maxWidth: "480px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              textAlign: "center",
             }}
           >
             {/* The Envelope Card */}
             <div
-              className="royal-card-shadow"
+              className="grand-card-shadow"
               style={{
                 width: "100%",
-                background: "linear-gradient(145deg, #FFFFFF 0%, #FCF9F3 100%)",
+                background:
+                  "linear-gradient(150deg, #FFFFFF 0%, #FDF9EE 70%, #F9F0DC 100%)",
                 border: "2px solid #D4AF37",
-                borderRadius: "24px",
-                padding: "50px 30px",
+                borderRadius: "28px",
+                padding: "54px 34px",
                 boxSizing: "border-box",
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                textAlign: "center",
               }}
             >
               {/* Corner Ornaments */}
               <div
                 style={{
                   position: "absolute",
-                  top: "14px",
-                  left: "14px",
+                  top: "16px",
+                  left: "16px",
                   color: "#C59B27",
+                  fontSize: "16px",
                 }}
               >
                 ✦
@@ -458,9 +478,10 @@ export default function LightRoyalWeddingCard() {
               <div
                 style={{
                   position: "absolute",
-                  top: "14px",
-                  right: "14px",
+                  top: "16px",
+                  right: "16px",
                   color: "#C59B27",
+                  fontSize: "16px",
                 }}
               >
                 ✦
@@ -468,9 +489,10 @@ export default function LightRoyalWeddingCard() {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "14px",
-                  left: "14px",
+                  bottom: "16px",
+                  left: "16px",
                   color: "#C59B27",
+                  fontSize: "16px",
                 }}
               >
                 ✦
@@ -478,9 +500,10 @@ export default function LightRoyalWeddingCard() {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "14px",
-                  right: "14px",
+                  bottom: "16px",
+                  right: "16px",
                   color: "#C59B27",
+                  fontSize: "16px",
                 }}
               >
                 ✦
@@ -490,8 +513,8 @@ export default function LightRoyalWeddingCard() {
               <span
                 style={{
                   fontFamily: "'Amiri', serif",
-                  fontSize: "24px",
-                  color: "#A27B20",
+                  fontSize: "25px",
+                  color: "#9C761D",
                   marginBottom: "8px",
                   fontWeight: 700,
                 }}
@@ -503,8 +526,8 @@ export default function LightRoyalWeddingCard() {
                 style={{
                   fontFamily: "'Cinzel Decorative', serif",
                   fontSize: "11px",
-                  letterSpacing: "0.4em",
-                  color: "#9C7923",
+                  letterSpacing: "0.45em",
+                  color: "#99731C",
                   textTransform: "uppercase",
                   marginBottom: "26px",
                 }}
@@ -512,30 +535,32 @@ export default function LightRoyalWeddingCard() {
                 Royal Imperial Farman
               </span>
 
-              {/* Gold Wax Stamp */}
+              {/* Pulsing 3D Wax Seal */}
               <motion.div
+                whileHover={{ scale: 1.08 }}
                 onClick={handleUnlockPalace}
                 style={{
-                  width: "105px",
-                  height: "105px",
+                  width: "115px",
+                  height: "115px",
                   borderRadius: "50%",
                   background:
-                    "radial-gradient(circle, #FFF1C5 0%, #E6C25B 50%, #B3861B 100%)",
+                    "radial-gradient(circle, #FFF6D8 0%, #E7C463 45%, #AA7F18 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "2px solid #FFFFFF",
+                  border: "3px solid #FFFFFF",
                   cursor: "pointer",
-                  animation: "waxPulse 2.8s infinite ease-in-out",
-                  marginBottom: "24px",
+                  animation: "waxPulseGlow 3s infinite ease-in-out",
+                  marginBottom: "26px",
                 }}
               >
                 <span
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "44px",
-                    color: "#533C08",
+                    fontSize: "48px",
+                    color: "#4A3608",
                     fontWeight: 700,
+                    textShadow: "0 1px 2px rgba(255,255,255,0.8)",
                   }}
                 >
                   A&H
@@ -543,10 +568,10 @@ export default function LightRoyalWeddingCard() {
               </motion.div>
 
               <h2
-                className="light-gold-shimmer"
+                className="light-gold-text-shimmer"
                 style={{
                   fontFamily: "'Great Vibes', cursive",
-                  fontSize: "52px",
+                  fontSize: "56px",
                   margin: "0 0 6px 0",
                   fontWeight: "normal",
                   lineHeight: 1.1,
@@ -559,28 +584,31 @@ export default function LightRoyalWeddingCard() {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "14px",
-                  letterSpacing: "0.25em",
-                  color: "#7D6C58",
+                  letterSpacing: "0.28em",
+                  color: "#6D5A46",
                   textTransform: "uppercase",
-                  margin: "0 0 32px 0",
+                  margin: "0 0 34px 0",
                   fontWeight: 600,
                 }}
               >
                 DECEMBER 28, 2025 • LAHORE
               </p>
 
-              {/* Reveal Button */}
+              {/* Open Royal Invitation Button */}
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 10px 30px rgba(212, 175, 55, 0.5)",
+                }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleUnlockPalace}
                 style={{
                   background:
-                    "linear-gradient(135deg, #ECC867 0%, #B88A22 100%)",
+                    "linear-gradient(135deg, #ECC867 0%, #BF9126 50%, #996F12 100%)",
                   color: "#FFFFFF",
                   border: "none",
                   borderRadius: "50px",
-                  padding: "15px 36px",
+                  padding: "16px 40px",
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "14px",
                   fontWeight: 700,
@@ -590,7 +618,7 @@ export default function LightRoyalWeddingCard() {
                   alignItems: "center",
                   gap: "10px",
                   cursor: "pointer",
-                  boxShadow: "0 8px 24px rgba(184, 138, 34, 0.4)",
+                  boxShadow: "0 8px 25px rgba(184, 138, 34, 0.38)",
                 }}
               >
                 <Sparkles size={16} />
@@ -601,59 +629,104 @@ export default function LightRoyalWeddingCard() {
         )}
       </AnimatePresence>
 
-      {/* ================= 2. THE EXPANDING UNFOLDED INVITATION CARD ================= */}
+      {/* ================= 2. THE REVEALED GRAND CARD (OPENS FROM DEAD CENTER) ================= */}
       {isUnlocked && (
         <motion.div
           initial={{
             opacity: 0,
-            scaleY: 0.4,
-            scaleX: 0.8,
-            rotateX: 20,
+            scale: 0.55, // Expands from dead center!
+            filter: "blur(14px)",
           }}
           animate={{
             opacity: 1,
-            scaleY: 1,
-            scaleX: 1,
-            rotateX: 0,
+            scale: 1,
+            filter: "blur(0px)",
           }}
           transition={{
             duration: 1.3,
-            ease: [0.16, 1, 0.3, 1], // Silk unfolding curve
+            ease: [0.16, 1, 0.3, 1], // Luxurious smooth Boutique expansion
           }}
-          className="royal-card-shadow"
+          className="grand-card-shadow"
           style={{
             width: "100%",
-            maxWidth: "680px",
-            backgroundColor: "#FFFDF9",
+            maxWidth: "780px", // 🔥 Bara اور Grand Size Card
+            backgroundColor: "#FFFEFA",
             border: "2px solid #D4AF37",
-            borderRadius: "28px",
-            padding: "55px 30px",
+            borderRadius: "32px",
+            padding: "60px 36px",
             boxSizing: "border-box",
             position: "relative",
             zIndex: 10,
             color: "#3B3226",
-            transformOrigin: "top center",
+            overflow: "hidden",
+            margin: "0 auto",
           }}
         >
           {/* Inner Golden Mughal Borders */}
           <div
             style={{
               position: "absolute",
-              inset: "12px",
+              inset: "14px",
               border: "1.5px solid rgba(212, 175, 55, 0.4)",
-              borderRadius: "20px",
+              borderRadius: "24px",
               pointerEvents: "none",
             }}
           />
           <div
             style={{
               position: "absolute",
-              inset: "18px",
-              border: "1px dashed rgba(212, 175, 55, 0.25)",
-              borderRadius: "16px",
+              inset: "20px",
+              border: "1px dashed rgba(212, 175, 55, 0.3)",
+              borderRadius: "20px",
               pointerEvents: "none",
             }}
           />
+
+          {/* SVG Ornamental Jaali Flourish Corners */}
+          <div
+            style={{
+              position: "absolute",
+              top: "24px",
+              left: "24px",
+              fontSize: "18px",
+              color: "#C59B27",
+            }}
+          >
+            ❦
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              top: "24px",
+              right: "24px",
+              fontSize: "18px",
+              color: "#C59B27",
+            }}
+          >
+            ❦
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              bottom: "24px",
+              left: "24px",
+              fontSize: "18px",
+              color: "#C59B27",
+            }}
+          >
+            ❦
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              bottom: "24px",
+              right: "24px",
+              fontSize: "18px",
+              color: "#C59B27",
+            }}
+          >
+            ❦
+          </div>
 
           <main
             style={{
@@ -670,11 +743,11 @@ export default function LightRoyalWeddingCard() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="light-gold-shimmer"
+              className="light-gold-text-shimmer"
               style={{
                 fontFamily: "'Amiri', serif",
-                fontSize: "36px",
-                marginBottom: "10px",
+                fontSize: "38px",
+                marginBottom: "12px",
                 fontWeight: 700,
               }}
             >
@@ -684,7 +757,7 @@ export default function LightRoyalWeddingCard() {
             <span
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "12px",
+                fontSize: "13px",
                 letterSpacing: "0.4em",
                 textTransform: "uppercase",
                 color: "#9C7923",
@@ -695,13 +768,13 @@ export default function LightRoyalWeddingCard() {
               Under the blessings of Allah Almighty & Parents
             </span>
 
-            {/* Couple Typography */}
+            {/* Couple Calligraphy */}
             <div style={{ margin: "10px 0 24px 0" }}>
               <h1
-                className="light-gold-shimmer"
+                className="light-gold-text-shimmer"
                 style={{
                   fontFamily: "'Great Vibes', cursive",
-                  fontSize: "clamp(62px, 13vw, 90px)",
+                  fontSize: "clamp(68px, 14vw, 98px)",
                   margin: 0,
                   lineHeight: 1.05,
                   fontWeight: "normal",
@@ -715,13 +788,13 @@ export default function LightRoyalWeddingCard() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "16px",
-                  margin: "6px 0",
+                  gap: "18px",
+                  margin: "8px 0",
                 }}
               >
                 <span
                   style={{
-                    width: "55px",
+                    width: "65px",
                     height: "1px",
                     background: "linear-gradient(90deg, transparent, #D4AF37)",
                   }}
@@ -730,15 +803,15 @@ export default function LightRoyalWeddingCard() {
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: "italic",
-                    fontSize: "22px",
-                    color: "#99731D",
+                    fontSize: "24px",
+                    color: "#946E19",
                   }}
                 >
                   cordially weds
                 </span>
                 <span
                   style={{
-                    width: "55px",
+                    width: "65px",
                     height: "1px",
                     background: "linear-gradient(90deg, #D4AF37, transparent)",
                   }}
@@ -746,10 +819,10 @@ export default function LightRoyalWeddingCard() {
               </div>
 
               <h1
-                className="light-gold-shimmer"
+                className="light-gold-text-shimmer"
                 style={{
                   fontFamily: "'Great Vibes', cursive",
-                  fontSize: "clamp(62px, 13vw, 90px)",
+                  fontSize: "clamp(68px, 14vw, 98px)",
                   margin: 0,
                   lineHeight: 1.05,
                   fontWeight: "normal",
@@ -762,29 +835,29 @@ export default function LightRoyalWeddingCard() {
             <p
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "17px",
+                fontSize: "18px",
                 fontStyle: "italic",
-                color: "#5C4F40",
-                maxWidth: "480px",
+                color: "#5C4A38",
+                maxWidth: "520px",
                 lineHeight: 1.8,
-                margin: "0 0 32px 0",
+                margin: "0 0 35px 0",
               }}
             >
-              Request the honour of your graceful company and sacred prayers as
-              we unite our hearts in the bond of love and faith.
+              Request the honour of your blissful presence to celebrate the
+              union of two hearts and bless them with your auspicious prayers.
             </p>
 
-            {/* ================= 3. ARCHED VENUE & EVENT SECTION ================= */}
+            {/* ================= 3. VENUE DETAILS SECTION ================= */}
             <section
               style={{
                 width: "100%",
-                background: "linear-gradient(180deg, #FFF9EB 0%, #FCF5E3 100%)",
+                background: "linear-gradient(180deg, #FFF9EB 0%, #FAF1DC 100%)",
                 border: "1.5px solid #D4AF37",
-                borderRadius: "180px 180px 18px 18px",
-                padding: "55px 24px 35px 24px",
+                borderRadius: "190px 190px 20px 20px",
+                padding: "60px 26px 38px 26px",
                 boxSizing: "border-box",
-                marginBottom: "35px",
-                boxShadow: "0 8px 30px rgba(212, 175, 55, 0.12)",
+                marginBottom: "36px",
+                boxShadow: "0 8px 30px rgba(212, 175, 55, 0.14)",
               }}
             >
               <div
@@ -815,7 +888,7 @@ export default function LightRoyalWeddingCard() {
               <h2
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "32px",
+                  fontSize: "34px",
                   fontWeight: 700,
                   letterSpacing: "0.08em",
                   color: "#4A3B1C",
@@ -835,7 +908,7 @@ export default function LightRoyalWeddingCard() {
                   gap: "20px",
                   color: "#4A3E31",
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "16px",
+                  fontSize: "17px",
                   marginBottom: "26px",
                 }}
               >
@@ -874,7 +947,7 @@ export default function LightRoyalWeddingCard() {
                   <h3
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "20px",
+                      fontSize: "22px",
                       fontWeight: 700,
                       margin: 0,
                       textTransform: "uppercase",
@@ -914,7 +987,7 @@ export default function LightRoyalWeddingCard() {
                     fontWeight: 700,
                     letterSpacing: "0.2em",
                     textTransform: "uppercase",
-                    padding: "13px 28px",
+                    padding: "14px 30px",
                     textDecoration: "none",
                     borderRadius: "50px",
                     boxShadow: "0 6px 20px rgba(184, 138, 34, 0.35)",
@@ -934,9 +1007,9 @@ export default function LightRoyalWeddingCard() {
               style={{
                 width: "100%",
                 margin: "0 0 35px 0",
-                padding: "20px 10px",
-                background: "#FAF5E8",
-                borderRadius: "18px",
+                padding: "24px 14px",
+                background: "#FAF4E6",
+                borderRadius: "20px",
                 border: "1.5px dashed #D4AF37",
               }}
             >
@@ -949,11 +1022,11 @@ export default function LightRoyalWeddingCard() {
                   marginBottom: "8px",
                 }}
               >
-                <Gift size={18} color="#B38728" />
+                <Gift size={20} color="#B38728" />
                 <span
                   style={{
                     fontFamily: "'Cinzel Decorative', serif",
-                    fontSize: "12px",
+                    fontSize: "13px",
                     letterSpacing: "0.25em",
                     color: "#7E5E16",
                     textTransform: "uppercase",
@@ -966,7 +1039,7 @@ export default function LightRoyalWeddingCard() {
               <p
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   color: "#6D5C4A",
                   margin: "0 0 16px 0",
                 }}
@@ -980,7 +1053,7 @@ export default function LightRoyalWeddingCard() {
             </motion.section>
 
             {/* ================= 5. COUNTDOWN TIMER ================= */}
-            <section style={{ width: "100%", margin: "0 0 35px 0" }}>
+            <section style={{ width: "100%", margin: "0 0 36px 0" }}>
               <span
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -1001,7 +1074,7 @@ export default function LightRoyalWeddingCard() {
                   display: "flex",
                   justifyContent: "center",
                   gap: "12px",
-                  maxWidth: "420px",
+                  maxWidth: "440px",
                   margin: "0 auto",
                 }}
               >
@@ -1017,16 +1090,16 @@ export default function LightRoyalWeddingCard() {
                       flex: 1,
                       backgroundColor: "#FFFFFF",
                       border: "1.5px solid #E0C77A",
-                      padding: "14px 6px",
+                      padding: "16px 6px",
                       borderRadius: "14px",
                       boxShadow: "0 4px 15px rgba(212, 175, 55, 0.12)",
                     }}
                   >
                     <span
-                      className="light-gold-shimmer"
+                      className="light-gold-text-shimmer"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: "30px",
+                        fontSize: "32px",
                         fontWeight: 700,
                         display: "block",
                         lineHeight: 1,
@@ -1054,12 +1127,12 @@ export default function LightRoyalWeddingCard() {
             <section
               style={{
                 width: "100%",
-                background: "linear-gradient(145deg, #FFFFFF 0%, #FDF9EE 100%)",
+                background: "linear-gradient(145deg, #FFFFFF 0%, #FCF8ED 100%)",
                 border: "1.5px solid #D4AF37",
-                padding: "36px 20px",
+                padding: "38px 24px",
                 boxSizing: "border-box",
-                borderRadius: "18px",
-                boxShadow: "0 8px 30px rgba(212, 175, 55, 0.15)",
+                borderRadius: "20px",
+                boxShadow: "0 8px 30px rgba(212, 175, 55, 0.14)",
               }}
             >
               <span
@@ -1080,7 +1153,7 @@ export default function LightRoyalWeddingCard() {
               <h2
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "28px",
+                  fontSize: "30px",
                   letterSpacing: "0.15em",
                   color: "#4A3B1C",
                   textTransform: "uppercase",
@@ -1098,7 +1171,7 @@ export default function LightRoyalWeddingCard() {
                     display: "flex",
                     flexDirection: "column",
                     gap: "14px",
-                    maxWidth: "360px",
+                    maxWidth: "380px",
                     margin: "0 auto",
                   }}
                 >
@@ -1112,14 +1185,14 @@ export default function LightRoyalWeddingCard() {
                       width: "100%",
                       backgroundColor: "#FFFFFF",
                       border: "1.5px solid #D9C382",
-                      padding: "14px 16px",
+                      padding: "15px 18px",
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: "14px",
                       letterSpacing: "0.15em",
                       color: "#3D3222",
                       boxSizing: "border-box",
                       outline: "none",
-                      borderRadius: "8px",
+                      borderRadius: "10px",
                     }}
                   />
 
@@ -1130,7 +1203,7 @@ export default function LightRoyalWeddingCard() {
                       width: "100%",
                       backgroundColor: "#FFFFFF",
                       border: "1.5px solid #D9C382",
-                      padding: "14px 16px",
+                      padding: "15px 18px",
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: "14px",
                       letterSpacing: "0.15em",
@@ -1138,7 +1211,7 @@ export default function LightRoyalWeddingCard() {
                       boxSizing: "border-box",
                       outline: "none",
                       cursor: "pointer",
-                      borderRadius: "8px",
+                      borderRadius: "10px",
                     }}
                   >
                     <option value="1">1 GUEST ATTENDING</option>
@@ -1155,8 +1228,8 @@ export default function LightRoyalWeddingCard() {
                       backgroundColor: "#B88A22",
                       color: "#FFFFFF",
                       border: "none",
-                      borderRadius: "8px",
-                      padding: "15px 20px",
+                      borderRadius: "10px",
+                      padding: "16px 20px",
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: "13px",
                       fontWeight: 700,
@@ -1172,14 +1245,14 @@ export default function LightRoyalWeddingCard() {
               ) : (
                 <div style={{ textAlign: "center", padding: "10px 0" }}>
                   <CheckCircle
-                    size={38}
+                    size={40}
                     color="#B88A22"
                     style={{ margin: "0 auto 12px auto" }}
                   />
                   <h3
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "24px",
+                      fontSize: "26px",
                       color: "#4A3B1C",
                       margin: "0 0 8px 0",
                     }}
@@ -1189,7 +1262,7 @@ export default function LightRoyalWeddingCard() {
                   <p
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "16px",
+                      fontSize: "17px",
                       color: "#6E5F50",
                       fontStyle: "italic",
                       margin: 0,
